@@ -1,5 +1,6 @@
 import { useCallback, useContext } from 'react';
 import { AuthContext } from '../auth/AuthProvider';
+import ScheduleComponent from '../components/ScheduleComponent';
 
 export const HomePage: React.FC = () => {
   const { isAuthenticated, logout } = useContext(AuthContext);
@@ -12,6 +13,7 @@ export const HomePage: React.FC = () => {
   return (
     <div>
       <h1>Home</h1>
+      <ScheduleComponent/>
       
       {isAuthenticated ? (
         <div>
