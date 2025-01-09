@@ -35,12 +35,12 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [state, setState] = useState<AuthState>(initialState);
-  const { isAuthenticated, isAuthenticating, authenticationError, pendingAuthentication, token } = state;
+  const { isAuthenticated, isAuthenticating, authenticationError, pendingAuthentication, token, username } = state;
   const login = useCallback<LoginFn>(loginCallback, []);
   const logout = useCallback<LogoutFn>(logoutCallback, []);
   useEffect(verifyAlreadyAuthenticated,[]);
   useEffect(authenticationEffect, [pendingAuthentication]);
-  const value = { isAuthenticated, login, logout, isAuthenticating, authenticationError, token };
+  const value = { isAuthenticated, login, logout, isAuthenticating, authenticationError, token, username  };
   return (
     <AuthContext.Provider value={value}>
       {children}
@@ -73,7 +73,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       canceled = true;
     }
 
-     function verifyToken() {
+    function verifyToken() {
       setState((prevState) => ({
         ...prevState,
         isAuthenticating: true,
@@ -133,6 +133,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setState({
           ...state,
           token,
+          username,
           pendingAuthentication: false,
           isAuthenticated: true,
           isAuthenticating: false,

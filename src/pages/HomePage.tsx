@@ -1,8 +1,7 @@
-import ScheduleComponent, { TypeOfFiltering } from '../components/ScheduleComponent';
+import ScheduleComponent from '../components/ScheduleComponent';
+import { TypeOfFiltering } from '../types';
 
 export const HomePage: React.FC = () => {
-  
-
   return (
     <>
       <h1>Upcoming events</h1>

@@ -24,7 +24,7 @@ export const MainNavbar = () => {
                     <Nav className="me-auto">
                         <Nav.Link as={Link} to="/history">History</Nav.Link>
                         <NavDropdown title="Reservation" id="basic-nav-dropdown">
-                            <NavDropdown.Item as={Link} to="/reservation/make">
+                            <NavDropdown.Item as={Link} to="/reservation">
                                 Make Reservation
                             </NavDropdown.Item>
                         </NavDropdown>
