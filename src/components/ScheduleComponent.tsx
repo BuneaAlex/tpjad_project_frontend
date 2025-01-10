@@ -31,12 +31,10 @@ const ScheduleComponent: React.FC<ScheduleComponentProps> = ({typeOfFiltering}) 
     const start = event.start ? event.start.toLocaleString() : 'N/A';
     const end = event.end ? event.end.toLocaleString() : 'N/A';
     const userId = event.extendedProps.userId;
-    const uuid = event.extendedProps.uuid;
     const room = event.extendedProps.room || "Unknown room";
     const type = event.extendedProps.type || "Unknown type"
     const description = `${type} in ${room}`;
     setSelectedEvent({
-      uuid,
       userId,
       title: event.title,
       start,
@@ -101,7 +99,6 @@ const ScheduleComponent: React.FC<ScheduleComponentProps> = ({typeOfFiltering}) 
           <Modal.Title>{selectedEvent.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p><strong>ID: </strong> {selectedEvent.uuid}</p>
           <p><strong>Start:</strong> {selectedEvent.start}</p>
           <p><strong>End:</strong> {selectedEvent.end}</p>
           <p><strong>Description:</strong> {selectedEvent.description}</p>

@@ -34,7 +34,6 @@ export enum TypeOfFiltering {
 }
 
 export interface EventData {
-  uuid: string;
   userId: string;
   title: string;
   start: string;
