@@ -66,7 +66,7 @@ export const ReservationForm = (props: any) => {
         },
         date: value.date,
       }
-      console.log("Form Response: ", value)
+      // console.log("Form Response: ", value)
       try {
         const response = await makeReservation(token, reservationDTO);
         setToast(
@@ -76,8 +76,8 @@ export const ReservationForm = (props: any) => {
       } catch (error: any) {
         if (error.response && error.response.status === 400) {
           setToast(
-            "Reservation Failed",
-            "Invalid reservation details, there might be a meeting that overlaps. Please check and try again."
+            "Failed to create reservation!",
+            `The room you are trying to reserve, ${reservationDTO.meeting.room}, is already booked on ${reservationDTO.date}. Try to find a different room or postpone the meeting!`
           );
         } else {
           setToast(

@@ -6,6 +6,7 @@ import { Login } from './Login';
 import { NavbarWrapper } from '../components/NavbarWrapper';
 import { HistoryPage } from '../pages/HistoryPage';
 import { ReservationPage } from '../pages/ReservationPage';
+import { Register } from './Register';
 
 export const PrivateRoutes = () => {
   const { isAuthenticated } = useContext<AuthState>(AuthContext);
@@ -15,6 +16,7 @@ export const PrivateRoutes = () => {
       <NavbarWrapper>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
           <Route
           path="/home"
@@ -28,7 +30,7 @@ export const PrivateRoutes = () => {
 
           <Route
           path="/reservation"
-          element={isAuthenticated ? <ReservationPage /> : <ReservationPage />}
+          element={isAuthenticated ? <ReservationPage /> : <Navigate to="/login" replace />}
           />
 
           <Route path="/" element={<Navigate to="/login" />} />

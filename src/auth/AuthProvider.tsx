@@ -1,27 +1,34 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { login as loginApi } from './authApi';
+import { login as loginApi, register as registerApi } from './authApi';
 import { getTokenFromLocalStorage, saveTokenToLocalStorage, saveUsernameToLocalStorage } from '../network/localStorageManager';
+import { boolean } from 'zod';
 
 
 type LoginFn = (username?: string, password?: string) => void;
 type LogoutFn = () => void;
+type RegisterFn = (username?: string, password?: string, firstName?: string, lastName?: string) => void;
 
 export interface AuthState {
   authenticationError: Error | null;
   isAuthenticated: boolean;
   isAuthenticating: boolean;
+  isRegistering: boolean;
   login?: LoginFn;
   logout?: LogoutFn;
+  register?: RegisterFn;
   pendingAuthentication?: boolean;
   username?: string;
   password?: string;
+  firstName?: string,
+  lastName?: string;
   token: string;
 }
 
 const initialState: AuthState = {
   isAuthenticated: false,
   isAuthenticating: false,
+  isRegistering: false,
   authenticationError: null,
   pendingAuthentication: false,
   token: '',
@@ -35,12 +42,13 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [state, setState] = useState<AuthState>(initialState);
-  const { isAuthenticated, isAuthenticating, authenticationError, pendingAuthentication, token, username } = state;
+  const { isAuthenticated, isAuthenticating, isRegistering, authenticationError, pendingAuthentication, token, username } = state;
   const login = useCallback<LoginFn>(loginCallback, []);
   const logout = useCallback<LogoutFn>(logoutCallback, []);
+  const register = useCallback<RegisterFn>(registerCallback, [])
   useEffect(verifyAlreadyAuthenticated,[]);
   useEffect(authenticationEffect, [pendingAuthentication]);
-  const value = { isAuthenticated, login, logout, isAuthenticating, authenticationError, token, username  };
+  const value = { isAuthenticated, login, logout, register, isAuthenticating, isRegistering, authenticationError, token, username  };
   return (
     <AuthContext.Provider value={value}>
       {children}
@@ -65,8 +73,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.clear();
   }
 
-  function verifyAlreadyAuthenticated()
-  {
+  function registerCallback(username?: string, password?: string, firstName?: string, lastName?: string): void {
+    setState({
+      ...state,
+      pendingAuthentication: true,
+      isRegistering: true,
+      username,
+      password,
+      firstName,
+      lastName
+    })
+  }
+
+  function verifyAlreadyAuthenticated() {
     let canceled = false;
     verifyToken();
     return () => {
@@ -102,7 +121,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     }
     
-    }
+  }
   
 
   function authenticationEffect() {
@@ -123,8 +142,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           ...state,
           isAuthenticating: true,
         });
-        const { username, password } = state;
-        const { token } = await loginApi(username, password);
+        const { username, password, firstName, lastName, isRegistering } = state;
+        let response = null
+        console.log('registering?', isRegistering)
+        if (isRegistering) {
+          response = await registerApi(username, password, firstName, lastName);
+        } else {
+          response = await loginApi(username, password);
+        }
+
+        const { token } = response;
         
         if (canceled) {
           return;
@@ -135,6 +162,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           token,
           username,
           pendingAuthentication: false,
+          isRegistering: false,
           isAuthenticated: true,
           isAuthenticating: false,
         });
@@ -149,6 +177,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           authenticationError: error as Error,
           pendingAuthentication: false,
           isAuthenticating: false,
+          isRegistering: false,
         });
       }
     }

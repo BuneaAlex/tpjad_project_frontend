@@ -23,7 +23,7 @@ export const getAll = async (token:string, type:TypeOfFiltering) => {
       'Authorization': `Bearer ${token}`
     }
   };
-  // console.log("getAll config: ", config)
+
   try {
     const response = await axios(config);
     return response.data;

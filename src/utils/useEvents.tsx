@@ -35,7 +35,7 @@ export const useEvents = (token: string, typeOfFiltering: TypeOfFiltering, room:
     }
   }, [room, events]);
 
-  console.log(events, filteredEvents, room)
+  // console.log(events, filteredEvents, room)
 
   return {events, filteredEvents}
 }

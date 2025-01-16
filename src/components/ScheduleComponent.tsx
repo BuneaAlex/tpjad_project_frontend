@@ -57,7 +57,6 @@ const ScheduleComponent: React.FC<ScheduleComponentProps> = ({typeOfFiltering}) 
 
   const handleCancelReservation = async (event: any) => {
     const response = await cancelReservation(token, event.uuid, event.userId);
-    console.log(response);
     setIsModalOpen(false);
     setRefetch(!refetch);
     setToast("Reservation Cancelled!","You have cancelled this reservation. Something came up?");
