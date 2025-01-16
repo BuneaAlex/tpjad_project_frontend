@@ -31,10 +31,12 @@ const ScheduleComponent: React.FC<ScheduleComponentProps> = ({typeOfFiltering}) 
     const start = event.start ? event.start.toLocaleString() : 'N/A';
     const end = event.end ? event.end.toLocaleString() : 'N/A';
     const userId = event.extendedProps.userId;
+    const uuid = event.extendedProps.uuid;
     const room = event.extendedProps.room || "Unknown room";
     const type = event.extendedProps.type || "Unknown type"
     const description = `${type} in ${room}`;
     setSelectedEvent({
+      uuid,
       userId,
       title: event.title,
       start,

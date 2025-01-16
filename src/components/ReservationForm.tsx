@@ -66,14 +66,27 @@ export const ReservationForm = (props: any) => {
         },
         date: value.date,
       }
-      // console.log("Form Response: ", value)
-      const response = await makeReservation(token, reservationDTO);
-      setToast(
-        "Reservation Created!",
-        `You have reserved room ${reservationDTO.meeting.room} on ${reservationDTO.date}. Got some business to settle!`
-      );
+      console.log("Form Response: ", value)
+      try {
+        const response = await makeReservation(token, reservationDTO);
+        setToast(
+          "Reservation Created!",
+          `You have reserved room ${reservationDTO.meeting.room} on ${reservationDTO.date}. Got some business to settle!`
+        );
+      } catch (error: any) {
+        if (error.response && error.response.status === 400) {
+          setToast(
+            "Reservation Failed",
+            "Invalid reservation details, there might be a meeting that overlaps. Please check and try again."
+          );
+        } else {
+          setToast(
+            "Error",
+            "An unexpected error occurred. Please try again later."
+          );
+        }
+      }
       showToast();
-      console.log(response)
     }
   });
 
